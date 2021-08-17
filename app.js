@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -7,7 +9,7 @@ const fs = require('fs');
 const helmet = require('helmet');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const cityRouter = require('./routes/city');
 
 const app = express();
 
@@ -30,7 +32,7 @@ if (app.get('env') === 'production') {
     flags: 'a',
   });
   // This will log to logs/access.log file
-  app.use(logger({ stream: accessLogStream }));
+  app.use(logger('combined', { stream: accessLogStream }));
 }
 // This will log in the console
 app.use(logger('dev'));
@@ -41,7 +43,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/city', cityRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

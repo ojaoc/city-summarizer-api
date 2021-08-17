@@ -4,23 +4,35 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const fs = require('fs');
+const helmet = require('helmet');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
 
+app.use(helmet()); // Helmet helps you secure your Express apps by setting various HTTP headers.
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// setup logger
 if (app.get('env') === 'production') {
-  const accessLogStream = fs.createWriteStream(
-    path.resolve(__dirname, '/logs/', 'access.log'),
-    { flags: 'a' }
-  );
+  const logDir = path.join(__dirname, '/logs/');
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, {
+      recursive: true,
+    });
+  }
+
+  const accessLogStream = fs.createWriteStream(`${logDir}/access.log`, {
+    flags: 'a',
+  });
+  // This will log to logs/access.log file
   app.use(logger({ stream: accessLogStream }));
 }
+// This will log in the console
 app.use(logger('dev'));
 
 app.use(express.json());

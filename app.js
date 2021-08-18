@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const cors = require('cors');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -36,6 +37,8 @@ if (app.get('env') === 'production') {
 }
 // This will log in the console
 app.use(logger('dev'));
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

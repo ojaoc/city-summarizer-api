@@ -6,10 +6,11 @@ module.exports.geoDbUrl = (namePrefix, limit, offset, sort) => {
     throw new Error('The GEODBURL requires a "namePrefix" as first param');
   }
 
-  let url = 'http://geodb-free-service.wirefreethought.com/v1/geo/cities?';
+  let url =
+    'http://geodb-free-service.wirefreethought.com/v1/geo/cities?types=CITY';
 
   // limit query record number
-  url += 'limit=';
+  url += '&limit=';
   if (limit) {
     url += limit;
   } else {

@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { geoDbUrl, openWeatherMapUrl } = require('../utils/consts');
 
-module.exports.listCities = ({ query: { q } }, res) => {
+module.exports.listCities = ({ query: { q, offset } }, res) => {
   if (!q) {
     return res
       .status(400)
@@ -10,14 +10,17 @@ module.exports.listCities = ({ query: { q } }, res) => {
       );
   }
 
-  const resultData = [];
+  const resultData = { data: [], metadata: {} };
   const promises = [];
 
   promises.push(
     axios
-      .get(geoDbUrl(q))
-      .then(({ data: { data } }) => {
-        resultData.push(...data);
+      .get(geoDbUrl(q, 10, offset))
+      .then(({ data: { data, metadata } }) => {
+        resultData.metadata = metadata;
+        data.forEach(({ name, country }) => {
+          resultData.data.push({ label: `${name}, ${country}`, value: name });
+        });
       })
       .catch((err) => {
         res.status(500).send(err.message);

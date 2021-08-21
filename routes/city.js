@@ -1,5 +1,6 @@
 const express = require('express');
 const { listCities, listCityDetails } = require('../controllers/city');
+const { notFoundMessage } = require('../utils/consts');
 
 const router = express.Router();
 
@@ -14,8 +15,17 @@ router.get('/list', async (req, res) => {
 });
 
 /* GET city details list. */
-router.get('/list-details', (req, res) => {
-  listCityDetails(req, res);
+router.get('/list-details', async (req, res) => {
+  try {
+    const cityListDetails = await listCityDetails(req, res);
+    res.send(cityListDetails);
+  } catch (err) {
+    if (err.message === notFoundMessage) {
+      res.status(404).send(err.message);
+      return;
+    }
+    res.status(500).send(err.message);
+  }
 });
 
 module.exports = router;

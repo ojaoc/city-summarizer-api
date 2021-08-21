@@ -53,3 +53,6 @@ module.exports.openWeatherMapUrl = (q) => {
   }
   return `https://api.openweathermap.org/data/2.5/weather?q=${q}&APPID=${apiKey}&units=metric`;
 };
+
+module.exports.notFoundMessage =
+  'Could not find any data about the requested resource';

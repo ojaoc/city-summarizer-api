@@ -1,5 +1,9 @@
 const axios = require('axios');
-const { geoDbUrl, openWeatherMapUrl } = require('../utils/consts');
+const {
+  geoDbUrl,
+  openWeatherMapUrl,
+  notFoundMessage,
+} = require('../utils/consts');
 
 module.exports.listCities = async ({ query: { q, offset } }) => {
   if (!q) {
@@ -24,9 +28,9 @@ module.exports.listCities = async ({ query: { q, offset } }) => {
   return resultData;
 };
 
-module.exports.listCityDetails = ({ query: { q } }, res) => {
+module.exports.listCityDetails = async ({ query: { q } }, res) => {
   if (!q) {
-    res.send([]);
+    return [];
   }
 
   const resultData = [];
@@ -40,10 +44,15 @@ module.exports.listCityDetails = ({ query: { q } }, res) => {
           resultData.push(data);
         })
         .catch((err) => {
-          res.status(500).send(err.message);
+          if (err.response.status === 404) {
+            throw new Error(notFoundMessage);
+          }
+          throw new Error(err.message);
         })
     );
   });
 
-  return Promise.all(promises).then(() => res.send(resultData));
+  await Promise.all(promises);
+
+  return resultData;
 };

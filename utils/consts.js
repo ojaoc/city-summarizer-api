@@ -51,5 +51,5 @@ module.exports.openWeatherMapUrl = (q) => {
   } else if (!q) {
     throw new Error('Query string required for open weather api call');
   }
-  return `https://api.openweathermap.org/data/2.5/weather?q=${q}&APPID=${apiKey}`;
+  return `https://api.openweathermap.org/data/2.5/weather?q=${q}&APPID=${apiKey}&units=metric`;
 };

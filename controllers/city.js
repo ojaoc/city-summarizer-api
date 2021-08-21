@@ -1,42 +1,32 @@
 const axios = require('axios');
 const { geoDbUrl, openWeatherMapUrl } = require('../utils/consts');
 
-module.exports.listCities = ({ query: { q, offset } }, res) => {
+module.exports.listCities = async ({ query: { q, offset } }) => {
   if (!q) {
-    return res
-      .status(400)
-      .send(
-        'Query parameter "q" which corresponds to the query string for city listing is required'
-      );
+    return [];
   }
 
   const resultData = { data: [], metadata: {} };
-  const promises = [];
 
-  promises.push(
-    axios
-      .get(geoDbUrl(q, 10, offset))
-      .then(({ data: { data, metadata } }) => {
-        resultData.metadata = metadata;
-        data.forEach(({ name, country }) => {
-          resultData.data.push({ label: `${name}, ${country}`, value: name });
-        });
-      })
-      .catch((err) => {
-        res.status(500).send(err.message);
-      })
-  );
+  try {
+    const {
+      data: { data, metadata },
+    } = await axios.get(geoDbUrl(q, 10, offset));
 
-  return Promise.all(promises).then(() => res.send(resultData));
+    resultData.metadata = metadata;
+    data.forEach(({ name, country }) => {
+      resultData.data.push({ label: `${name}, ${country}`, value: name });
+    });
+  } catch (err) {
+    throw new Error(err.message);
+  }
+
+  return resultData;
 };
 
 module.exports.listCityDetails = ({ query: { q } }, res) => {
   if (!q) {
-    return res
-      .status(400)
-      .send(
-        'Query parameter "q" which corresponds to the query string for city DETAILS listing is required'
-      );
+    res.send([]);
   }
 
   const resultData = [];

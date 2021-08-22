@@ -28,7 +28,7 @@ module.exports.listCities = async ({ query: { q, offset } }) => {
   return resultData;
 };
 
-module.exports.listCityDetails = async ({ query: { q } }, res) => {
+module.exports.listCityDetails = async ({ query: { q } }) => {
   if (!q) {
     return [];
   }

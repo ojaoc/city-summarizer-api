@@ -29,6 +29,10 @@ yarn start
 
 This will start the app on http://localhost:3000
 
+## Swagger Documentation
+
+After starting the app, you can access the swagger docs for its endpoints on http://localhost:3000/api-docs
+
 ## Development Server
 
 If your goal is development, install the dependencies and then run the dev server

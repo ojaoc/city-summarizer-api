@@ -8,11 +8,15 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const fs = require('fs');
 const helmet = require('helmet');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger_output.json');
 
 const indexRouter = require('./routes/index');
 const cityRouter = require('./routes/city');
 
 const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(helmet()); // Helmet helps you secure your Express apps by setting various HTTP headers.
 

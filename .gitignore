@@ -137,4 +137,6 @@ dist
 .history
 .ionide
 
+swagger_output.json
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node
